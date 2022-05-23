@@ -1,31 +1,97 @@
-# personaapi
-<h2>Digital Innovation: Expert class - Desenvolvendo um sistema de gerenciamento de pessoas em API REST com Spring Boot</h2>
+# Cities API
+<h2>Digital Innovation: Expert class - Desenvolvendo uma API Rest de consulta de cidades do Brasil</h2>
+ 
 
-Nesta live coding vamos desenvolver um pequeno sistema para o gerenciamento de pessoas de uma empresa através de uma API REST, criada com o Spring Boot.
+## Requirements
 
-Durante a sessão, serão desenvolvidos e abordados os seguintes tópicos:
+* Linux
+* Git
+* Java 8
+* Docker
+* IntelliJ Community
+* Heroku CLI
 
-* Setup inicial de projeto com o Spring Boot Initialzr
-* Criação de modelo de dados para o mapeamento de entidades em bancos de dados
-* Desenvolvimento de operações de gerenciamento de usuários (Cadastro, leitura, atualização e remoção de pessoas de um sistema).
-* Relação de cada uma das operações acima com o padrão arquitetural REST, e a explicação de cada um dos conceitos REST envolvidos durante o desenvolvimento do projeto.
-* Desenvolvimento de testes unitários para validação das funcionalidades
-* Implantação do sistema na nuvem através do Heroku
+## DataBase
 
-Para executar o projeto no terminal, digite o seguinte comando:
+### Postgres
+
+* [Postgres Docker Hub](https://hub.docker.com/_/postgres)
 
 ```shell script
-mvn spring-boot:run 
+docker run --name cities-db -d -p 5432:5432 -e POSTGRES_USER=postgres_user_city -e POSTGRES_PASSWORD=super_password -e POSTGRES_DB=cities postgres
 ```
+
+### Populate
+
+* [data](https://github.com/chinnonsantos/sql-paises-estados-cidades/tree/master/PostgreSQL)
+
+```shell script
+cd ~/workspace/sql-paises-estados-cidades/PostgreSQL
+
+docker run -it --rm --net=host -v $PWD:/tmp postgres /bin/bash
+
+psql -h localhost -U postgres_user_city cities -f /tmp/pais.sql
+psql -h localhost -U postgres_user_city cities -f /tmp/estado.sql
+psql -h localhost -U postgres_user_city cities -f /tmp/cidade.sql
+
+psql -h localhost -U postgres_user_city cities
+
+CREATE EXTENSION cube; 
+CREATE EXTENSION earthdistance;
+```
+
+* [Postgres Earth distance](https://www.postgresql.org/docs/current/earthdistance.html)
+* [earthdistance--1.0--1.1.sql](https://github.com/postgres/postgres/blob/master/contrib/earthdistance/earthdistance--1.0--1.1.sql)
+* [OPERATOR <@>](https://github.com/postgres/postgres/blob/master/contrib/earthdistance/earthdistance--1.1.sql)
+* [postgrescheatsheet](https://postgrescheatsheet.com/#/tables)
+* [datatype-geometric](https://www.postgresql.org/docs/current/datatype-geometric.html)
+
+### Access
+
+```shell script
+docker exec -it cities-db /bin/bash
+
+psql -U postgres_user_city cities
+```
+
+### Query Earth Distance
+
+Point
+```roomsql
+select ((select lat_lon from cidade where id = 4929) <@> (select lat_lon from cidade where id=5254)) as distance;
+```
+
+Cube
+```roomsql
+select earth_distance(
+    ll_to_earth(-21.95840072631836,-47.98820114135742), 
+    ll_to_earth(-22.01740074157715,-47.88600158691406)
+) as distance;
+```
+
+## Spring Boot
+
+* [https://start.spring.io/](https://start.spring.io/)
+
++ Java 8
++ Gradle Project
++ Jar
++ Spring Web
++ Spring Data JPA
++ PostgreSQL Driver
 
 Após executar o comando acima, basta apenas abrir o seguinte endereço e visualizar a execução do projeto:
 
 ```
-http://localhost:8080/api/v1/people
+http://localhost:8080/swagger-ui.html
 ```
 
+Ou visualizar no heroku
 
-São necessários os seguintes pré-requisitos para a execução do projeto desenvolvido durante a aula:
+```
+https://cities-api-oid.herokuapp.com/swagger-ui.html```
+
+São necessários os seguintes pré-requisitos para a execução do projeto:
 
 * Java 11 ou versões superiores.
 * Maven 3.6.3 ou versões superiores.
@@ -35,21 +101,6 @@ São necessários os seguintes pré-requisitos para a execução do projeto dese
 * Conta no Heroku para o deploy do projeto na nuvem
 * Muita vontade de aprender e compartilhar conhecimento :)
 
-Abaixo, seguem links bem bacanas, sobre tópicos mencionados durante a aula:
-
-* [SDKMan! para gerenciamento e instalação do Java e Maven](https://sdkman.io/)
-* [Referência do Intellij IDEA Community, para download](https://www.jetbrains.com/idea/download)
-* [Palheta de atalhos de comandos do Intellij](https://resources.jetbrains.com/storage/products/intellij-idea/docs/IntelliJIDEA_ReferenceCard.pdf)
-* [Site oficial do Spring](https://spring.io/)
-* [Site oficial do Spring Initialzr, para setup do projeto](https://start.spring.io/)
-* [Site oficial do Heroku](https://www.heroku.com/)
-* [Site oficial do GIT](https://git-scm.com/)
-* [Site oficial do GitHub](http://github.com/)
-* [Documentação oficial do Lombok](https://projectlombok.org/)
-* [Documentação oficial do Map Struct](https://mapstruct.org/)
-* [Referência para o padrão arquitetural REST](https://restfulapi.net/)
-
-[Neste link](https://drive.google.com/file/d/1crVPOVl6ok2HeYjh3fjQuGQn2lDZVHrn/view?usp=sharing), seguem os slides apresentados como o roteiro utilizado para o desenvolvimento do projeto da nossa sessão.
 
 
 
