@@ -1,7 +1,6 @@
 package com.github.developermobile.citiesapi.state.controller;
 
 import com.github.developermobile.citiesapi.state.entity.State;
-import com.github.developermobile.citiesapi.state.repository.StateRepository;
 import com.github.developermobile.citiesapi.state.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
