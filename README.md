@@ -84,12 +84,14 @@ Após executar o comando acima, basta apenas abrir o seguinte endereço e visual
 
 ```
 http://localhost:8080/swagger-ui.html
+http://localhost:8080/cities
 ```
 
 Ou visualizar no heroku
 
 ```
-https://cities-api-oid.herokuapp.com/swagger-ui.html```
+https://cities-api-oid.herokuapp.com/swagger-ui.html
+https://cities-api-oid.herokuapp.com/cities```
 
 São necessários os seguintes pré-requisitos para a execução do projeto:
 
